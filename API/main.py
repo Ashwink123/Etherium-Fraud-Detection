@@ -21,7 +21,7 @@ app.add_middleware(
 redis = get_redis_connection( 
     host= 'localhost',
     port = 6379,
-    db = 1,
+    db = 0,
     decode_responses= True
 )
 
