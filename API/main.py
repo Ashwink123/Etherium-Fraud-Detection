@@ -1,10 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from redis_om import get_redis_connection, HashModel
-
-
-
-
+from redis_om import get_redis_connection
+from routers import train_model , transaction
+from config import redis_settings 
 
 app = FastAPI()
 
@@ -19,28 +17,13 @@ app.add_middleware(
 )
 
 redis = get_redis_connection( 
-    host= 'localhost',
-    port = 6379,
-    db = 0,
+    host= redis_settings.database_hostname,
+    port = redis_settings.database_port,
+    db = redis_settings.db,
     decode_responses= True
 )
 
-class Demo(HashModel):
-    name: str
-    age: int
-    class Meta:
-        database: redis
 
+app.include_router(train_model.router)
+app.include_router(transaction.router)
 
-
-
-@app.post('/stream')
-def write_stream(demo: Demo):
-    redis.xadd('demo_stream',demo.dict(),'*')
-    return {'Message':'Data Succesfully Written to stream'}
-
-
-@app.get('/get_data')
-def read_stream():
-    read_data = redis.xrevrange('demo_stream',max='+',min='-',count=5)     
-    return read_data
