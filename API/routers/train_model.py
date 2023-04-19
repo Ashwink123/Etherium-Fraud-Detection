@@ -2,10 +2,11 @@ import sys
 sys.path.append("../")
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from utils import CICD
-from request_models import ModelStatus
+from pydantic import BaseModel
 
 router = APIRouter(tags=['Training'])
-
+class ModelStatus(BaseModel):
+    request : str        
 
 @router.post('/train')
 def retrain(request: ModelStatus):
