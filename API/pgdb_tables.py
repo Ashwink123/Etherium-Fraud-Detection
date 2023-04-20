@@ -55,3 +55,15 @@ class Post(Base):
     erc20_uniq_rec_token_name= Column(FLOAT)
     erc20_most_sent_token_type= Column(String)
     erc20_most_rec_token_type= Column(String)
+
+class Model_Status(Base):
+    __tablename__ = "model_status"
+    id = Column(Integer,primary_key=True,nullable=False)
+    sensitivity= Column(FLOAT)
+    specificity= Column(FLOAT)
+    precision= Column(FLOAT)
+    recall= Column(FLOAT)
+    f1= Column(FLOAT)
+    manual_retraining_necessity= Column(String)
+    tuned_at = Column(TIMESTAMP(timezone=True),nullable=False,server_default=text('now()'))
+

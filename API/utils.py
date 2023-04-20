@@ -26,7 +26,7 @@ def resample(X,Y):
 def scaler(data):
     sc = StandardScaler()
     sc.fit(data)
-    pickle.dump(sc, open('../pickle/scaler.pkl','wb'))
+    # pickle.dump(sc, open('../pickle/scaler.pkl','wb'))
     scaled = sc.transform(data)
     scaled = pd.DataFrame(scaled,columns=data.columns)
     return scaled
@@ -40,14 +40,14 @@ def model_assesment(ground_truth,predictions):
     FP = cm[0,1] # false positives
     FN = cm[1,0] # false negatives
     
-    Sensitivity = TP / float(TP+FN)
-    Specificity = TN / float(TN+FP)
-    Precision = TP / float(TP + FP)
-    Recall = TP / float(TP + FN)
+    Sensitivity = round(TP / float(TP+FN),2)
+    Specificity = round(TN / float(TN+FP),2)
+    Precision = round(TP / float(TP + FP),2)
+    Recall = round(TP / float(TP + FN),2)
     
     F1 = round(f1_score(ground_truth,predictions)*100,2)
     
-    return {'Sensitivity':Sensitivity,'Specificity':Specificity,'Precision':Precision,'Recall':Recall,'F1':F1}
+    return {'sensitivity':Sensitivity,'specificity':Specificity,'precision':Precision,'recall':Recall,'f1':F1}
 
 
 def CICD(data):
@@ -58,8 +58,8 @@ def CICD(data):
         train_columns.pop()
 
         
-    target = data['FLAG']
-    independent = data.iloc[:,2:-1]
+    target = data['flag']
+    independent = data.iloc[:,3:-1]
     
     object_valued_columns = []
     numerical_valued_columns = []
@@ -98,21 +98,22 @@ def CICD(data):
     
     assesment = model_assesment(y_test,pred)
     
-    if assesment['F1'] > 0.8:
+    if assesment['f1'] > 0.8:
         
-        assesment['Manual Retraining Necessity'] = 'NO'
-        pickle.dump(xgbclassifier, open('./models/xbg.pkl','wb'))
+        assesment['manual_retraining_necessity'] = 'NO'
+
+        # pickle.dump(xgbclassifier, open('./models/xbg.pkl','wb'))
         
-        deployment_cols = list(x_train.columns)
-        with open('./models/ColNames.txt', 'w') as fp:
-            for item in deployment_cols:
-                # write each item on a new line
-                fp.write("%s\n" % item)
+        # deployment_cols = list(x_train.columns)
+        # with open('./models/ColNames.txt', 'w') as fp:
+        #     for item in deployment_cols:
+        #         # write each item on a new line
+        #         fp.write("%s\n" % item)
 
         return assesment
     
-    elif assesment['F1'] < 0.8:
-        assesment['Manual Retraining Necessity'] = 'YES'
+    elif assesment['f1'] < 0.8:
+        assesment['manual_retraining_necessity'] = 'YES'
         return assesment 
 
 

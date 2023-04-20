@@ -3,6 +3,7 @@ sys.path.append("../")
 from logging.config import fileConfig
 from database import Base
 from pgdb_tables import Post
+from pgdb_tables import Model_Status
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from config import postgres_settings
