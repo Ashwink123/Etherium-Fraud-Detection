@@ -27,7 +27,7 @@ def retrain(request: ModelStatus,db: Session = Depends(get_db)):
     
     elif request.request == 'status':
 
-        model_status = db.query(Model_Status).order_by(Model_Status.tuned_at.asc()).first()
+        model_status = db.query(Model_Status).order_by(Model_Status.tuned_at.desc()).first()
         return model_status
     
     else:

@@ -26,7 +26,7 @@ def resample(X,Y):
 def scaler(data):
     sc = StandardScaler()
     sc.fit(data)
-    # pickle.dump(sc, open('../pickle/scaler.pkl','wb'))
+    pickle.dump(sc, open('./models/scaler.pkl','wb'))
     scaled = sc.transform(data)
     scaled = pd.DataFrame(scaled,columns=data.columns)
     return scaled
@@ -102,13 +102,13 @@ def CICD(data):
         
         assesment['manual_retraining_necessity'] = 'NO'
 
-        # pickle.dump(xgbclassifier, open('./models/xbg.pkl','wb'))
+        pickle.dump(xgbclassifier, open('./models/xbg.pkl','wb'))
         
-        # deployment_cols = list(x_train.columns)
-        # with open('./models/ColNames.txt', 'w') as fp:
-        #     for item in deployment_cols:
-        #         # write each item on a new line
-        #         fp.write("%s\n" % item)
+        deployment_cols = list(x_train.columns)
+        with open('./models/ColNames.txt', 'w') as fp:
+            for item in deployment_cols:
+                # write each item on a new line
+                fp.write("%s\n" % item)
 
         return assesment
     
