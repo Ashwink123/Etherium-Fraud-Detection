@@ -52,12 +52,12 @@ def write_stream(transactions: Transactions_Request):
 
     transactions=transactions.dict()
     transactions['Flag'] = flag
-    redis.xadd('demo_stream',transactions,'*')
+    redis.xadd('transaction_stream',transactions,'*')
 
     return {'Transaction Status':'Completed'}
 
 @router.get('/get_data')
 def read_stream():
 
-    read_data = redis.xrevrange('demo_stream',max='+',min='-',count=5)     
+    read_data = redis.xrevrange('transaction_stream',max='+',min='-',count=5)     
     return read_data
